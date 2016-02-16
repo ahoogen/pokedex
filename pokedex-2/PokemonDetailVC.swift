@@ -28,6 +28,8 @@ class PokemonDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         nameLbl.text = pokemon.name
+        pokedexIdLbl.text = "\(pokemon.pokedexId)"
+        
     }
     
     @IBAction func backBtnPressed(sender: AnyObject)
