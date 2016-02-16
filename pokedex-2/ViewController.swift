@@ -98,7 +98,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(105, 105)
+        return CGSizeMake(105, 126)
     }
     
     @IBAction func musicBtnPressed(sender: UIButton)
