@@ -15,6 +15,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
     @IBOutlet weak var collection: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var musicBtn: UIButton!
     
     var musicPlayer: AVAudioPlayer!
     var pokemon = [Pokemon]()
@@ -41,7 +42,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             musicPlayer = try AVAudioPlayer(contentsOfURL: NSURL(string: path)!)
             musicPlayer.prepareToPlay()
             musicPlayer.numberOfLoops = -1
-            musicPlayer.play()
+            musicBtn.alpha = 0.2
         } catch let err as NSError {
             print(err.debugDescription)
         }

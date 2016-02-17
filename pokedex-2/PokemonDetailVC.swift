@@ -20,20 +20,46 @@ class PokemonDetailVC: UIViewController {
     @IBOutlet weak var pokedexIdLbl: UILabel!
     @IBOutlet weak var baseAttackLbl: UILabel!
     @IBOutlet weak var nextEvolutionLbl: UILabel!
-    @IBOutlet weak var nextEvImg1: UIImageView!
-    @IBOutlet weak var nextEvImg2: UIImageView!
+    @IBOutlet weak var currentEvoImg: UIImageView!
+    @IBOutlet weak var nextEvImg: UIImageView!
     
     var pokemon: Pokemon!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLbl.text = pokemon.name.capitalizedString
-        pokedexIdLbl.text = "\(pokemon.pokedexId)"
-        pokeImg.image = UIImage(named: "\(pokemon.pokedexId)")
+        let img = UIImage(named: "\(pokemon.pokedexId)")
+        pokeImg.image = img
+        currentEvoImg.image = img
         pokemon.downloadPokemonDetails { () -> () in
-            // Called after download is complete
+            self.updateUi()
         }
         
+    }
+    
+    func updateUi()
+    {
+        nameLbl.text = pokemon.name.capitalizedString
+        pokedexIdLbl.text = "\(pokemon.pokedexId)"
+        descLbl.text = pokemon.description
+        typeLbl.text = pokemon.type
+        defenseLbl.text = pokemon.defense
+        heightLbl.text = pokemon.height
+        weightLbl.text = pokemon.weight
+        baseAttackLbl.text = pokemon.attack
+        if pokemon.nextEvolutionId != "" {
+            let nextId = pokemon.nextEvolutionId
+            let nextEvo = pokemon.nextEvolutionTxt
+            let nextLevel = pokemon.nextEvolutionLevel
+            var str: String = ""
+            str = "Next Evolution: \(nextEvo)"
+            if nextLevel != "" {
+                str += " LVL \(nextLevel)"
+            }
+            nextEvImg.image = UIImage(named: "\(nextId)")!
+        } else {
+            nextEvImg.hidden = true
+            nextEvolutionLbl.text = "No Evolutions"
+        }
     }
     
     @IBAction func backBtnPressed(sender: AnyObject)

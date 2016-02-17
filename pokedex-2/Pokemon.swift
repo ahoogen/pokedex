@@ -20,6 +20,9 @@ class Pokemon
     private var _weight: String!
     private var _baseAttack: String!
     private var _pokemonUrl: String!
+    private var _nextEvolutionTxt: String!
+    private var _nextEvolutionId: String!
+    private var _nextEvolutionLevel: String!
     
     var name: String {
         get {
@@ -30,6 +33,87 @@ class Pokemon
     var pokedexId: Int {
         get {
             return _pokedexId
+        }
+    }
+    
+    var description: String {
+        get {
+            if _description == nil {
+                _description = ""
+            }
+            return _description
+        }
+    }
+    
+    var type: String {
+        get {
+            if _type == "nil" {
+                _type = ""
+            }
+            return _type
+        }
+    }
+    
+    var defense: String {
+        get {
+            if _defense == nil {
+                _defense = ""
+            }
+            return _defense
+        }
+    }
+    
+    var height: String {
+        get {
+            if _height == nil {
+                _height = ""
+            }
+            return _height
+        }
+    }
+    
+    var weight: String {
+        get {
+            if _weight == nil {
+                _weight = ""
+            }
+            return _weight
+        }
+    }
+    
+    var attack: String {
+        get {
+            if _baseAttack == nil {
+                _baseAttack = ""
+            }
+            return _baseAttack
+        }
+    }
+    
+    var nextEvolutionTxt: String {
+        get {
+            if _nextEvolutionTxt == nil {
+                _nextEvolutionTxt = ""
+            }
+            return _nextEvolutionTxt
+        }
+    }
+    
+    var nextEvolutionLevel: String {
+        get {
+            if _nextEvolutionLevel == nil {
+                _nextEvolutionLevel = ""
+            }
+            return _nextEvolutionLevel
+        }
+    }
+    
+    var nextEvolutionId: String {
+        get {
+            if _nextEvolutionId == nil {
+                _nextEvolutionId = ""
+            }
+            return _nextEvolutionId
         }
     }
     
@@ -62,8 +146,8 @@ class Pokemon
                     self._defense = "\(defense)"
                 }
                 
-                self._type = ""
                 if let types = dict["types"] as? [Dictionary<String, String>] where types.count > 0 {
+                    self._type = ""
                     var multiples: Bool = false
                     for type in types {
                         if multiples {
@@ -75,7 +159,22 @@ class Pokemon
                     }
                 }
                 
-                self._description = "NODESC"
+                if let evolArr = dict["evolutions"] as? [Dictionary<String, AnyObject>] where evolArr.count > 0 {
+                    if let to = evolArr[0]["to"] as? String {
+                        if to.rangeOfString("mega") == nil {
+                            self._nextEvolutionTxt = to
+                            if let str = evolArr[0]["resource_uri"] as? String {
+                                let newStr = str.stringByReplacingOccurrencesOfString("/api/v1/pokemon/", withString: "")
+                                let num = newStr.stringByReplacingOccurrencesOfString("/", withString: "")
+                                self._nextEvolutionId = num
+                            }
+                            if let level = evolArr[0]["level"] as? Int {
+                                self._nextEvolutionLevel = "\(level)"
+                            }
+                        }
+                    }
+                }
+                
                 if let descriptions = dict["descriptions"] as? [Dictionary<String, String>] where descriptions.count > 0 {
                     if let uri = descriptions[0]["resource_uri"] {
                         let nsurl = NSURL(string: "\(URL_BASE)\(uri)")!
@@ -83,14 +182,7 @@ class Pokemon
                             let dRes = response.result
                             if let descDict = dRes.value as? Dictionary<String, AnyObject> {
                                 if let desc = descDict["description"] as? String {
-                                    print("From closure: \(desc)")
                                     self._description = desc
-                                    print(self._type)
-                                    print(self._weight)
-                                    print(self._height)
-                                    print(self._baseAttack)
-                                    print(self._defense)
-                                    print(self._description)
                                 }
                             }
                             completed()
