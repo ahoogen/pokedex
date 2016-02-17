@@ -13,7 +13,7 @@ class Pokemon
 {
     private var _name: String!
     private var _pokedexId: Int!
-    private var _desc: String!
+    private var _description: String!
     private var _type: String!
     private var _defense: String!
     private var _height: String!
@@ -72,6 +72,29 @@ class Pokemon
                         
                         self._type! += type["name"]!.capitalizedString
                         multiples = true
+                    }
+                }
+                
+                self._description = "NODESC"
+                if let descriptions = dict["descriptions"] as? [Dictionary<String, String>] where descriptions.count > 0 {
+                    if let uri = descriptions[0]["resource_uri"] {
+                        let nsurl = NSURL(string: "\(URL_BASE)\(uri)")!
+                        Alamofire.request(.GET, nsurl).responseJSON { response in
+                            let dRes = response.result
+                            if let descDict = dRes.value as? Dictionary<String, AnyObject> {
+                                if let desc = descDict["description"] as? String {
+                                    print("From closure: \(desc)")
+                                    self._description = desc
+                                    print(self._type)
+                                    print(self._weight)
+                                    print(self._height)
+                                    print(self._baseAttack)
+                                    print(self._defense)
+                                    print(self._description)
+                                }
+                            }
+                            completed()
+                        }
                     }
                 }
             }
